@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+@layer base {
+  * {
+    @apply font-inter;
+  }
+
+  body {
+    @apply bg-background text-navy min-h-screen;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Custom component classes */
+@layer components {
+  .btn-primary {
+    @apply bg-navy text-white rounded-xl px-6 py-3 font-semibold 
+           transition-all duration-200 hover:bg-opacity-90 hover:shadow-lg 
+           active:scale-95 cursor-pointer;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-navy text-navy rounded-xl px-6 py-3 font-semibold 
+           transition-all duration-200 hover:bg-navy hover:text-white 
+           active:scale-95 cursor-pointer;
+  }
+
+  .btn-warning {
+    @apply bg-warning text-white rounded-xl px-6 py-3 font-semibold 
+           transition-all duration-200 hover:bg-opacity-90 hover:shadow-lg 
+           active:scale-95 cursor-pointer;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-md p-6 transition-all duration-200;
+  }
+
+  .card-hover:hover {
+    @apply shadow-lg transform -translate-y-0.5;
+  }
+
+  .input-field {
+    @apply w-full rounded-xl border-gray-300 px-4 py-3 text-base
+           focus:border-navy focus:ring-2 focus:ring-navy focus:ring-opacity-20
+           transition-all duration-200 outline-none;
+  }
+
+  .progress-bar {
+    @apply w-full bg-gray-200 rounded-full h-2.5 overflow-hidden;
+  }
+
+  .progress-bar-fill {
+    @apply bg-covered h-full rounded-full transition-all duration-500 ease-in-out;
+  }
+
+  /* Loading spinner animation */
+  .spinner {
+    @apply w-12 h-12 border-4 border-t-transparent rounded-full animate-spin;
+    border-color: #1B2B5E;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Fade-in animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  /* Pulse animation for loading states */
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .pulse-slow {
+    animation: pulse-slow 2s ease-in-out infinite;
+  }
+}
