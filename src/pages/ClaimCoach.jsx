@@ -143,12 +143,17 @@ export default function ClaimCoach() {
     if (!result) return;
     setImageLoading(true);
     try {
-      const res = await generateClaimImage(
-        `Insurance claim summary card for ${result.insurer_name || 'insurance company'}: ${result.covered_explanation}. Documents needed: ${result.documents.join(', ')}. Deadline: ${result.deadline_days} days.`
-      );
+      const prompt = `Create a clean professional insurance claim summary card infographic. 
+        White background, navy blue headers (#1B2B5E), green checkmark for coverage status.
+        Title: "CLAIM SUMMARY - ${result.insurer_name || 'Insurance Claim'}".
+        Coverage Status: ${result.covered === 'YES' ? '✅ COVERED' : result.covered === 'NO' ? '❌ NOT COVERED' : '⚠️ PARTIALLY COVERED'}.
+        Documents needed: ${result.documents?.slice(0, 4).join(', ')}.
+        Deadline: Submit within ${result.deadline_days} days.
+        Powered by ClaimReady. Clean fintech design, no photos.`;
+      const res = await generateClaimImage(prompt);
       setImageResult(res);
-    } catch {
-      // Placeholder already returned
+    } catch (err) {
+      setImageResult({ status: 'error', message: err.message });
     } finally {
       setImageLoading(false);
     }
@@ -159,12 +164,18 @@ export default function ClaimCoach() {
     if (!result) return;
     setVideoLoading(true);
     try {
-      const res = await generateClaimVideo(
-        `Video summary of insurance claim for ${result.insurer_name || 'insurance company'}: ${result.covered_explanation}.`
-      );
+      const prompt = `Create a calm professional 20-second insurance claim briefing video for Singapore.
+        Show text on screen: Coverage Status: ${result.covered === 'YES' ? 'YOU ARE COVERED' : 'NOT COVERED'}.
+        ${result.covered_explanation}.
+        Documents to collect: ${result.documents?.slice(0, 3).join(', ')}.
+        Submit your claim within ${result.deadline_days} days.
+        Call your insurer and say: ${result.call_script}.
+        Clean white background, navy and green text, professional calm voice, easy to read.
+        Designed for someone who just left hospital.`;
+      const res = await generateClaimVideo(prompt);
       setVideoResult(res);
-    } catch {
-      // Placeholder already returned
+    } catch (err) {
+      setVideoResult({ status: 'error', message: err.message });
     } finally {
       setVideoLoading(false);
     }
@@ -485,7 +496,7 @@ export default function ClaimCoach() {
                   className="btn-secondary flex items-center justify-center gap-2"
                 >
                   {videoLoading ? (
-                    <><div className="spinner !w-5 !h-5 !border-2"></div> Generating...</>
+                    <><div className="spinner !w-5 !h-5 !border-2"></div> Generating video (up to 90s)...</>
                   ) : (
                     <>🎬 Generate Video Summary</>
                   )}
@@ -501,34 +512,63 @@ export default function ClaimCoach() {
                 </button>
               </div>
 
-              {/* Image/Video Results */}
+              {/* Image Result */}
               {imageResult && (
-                <div className="mt-4">
-                  <p className="text-sm text-gray-600 mb-2">📸 Visual Claim Card:</p>
-                  <img
-                    src={imageResult.url}
-                    alt="Claim Card"
-                    className="w-full max-w-md rounded-xl mx-auto"
-                  />
-                  {imageResult.status === 'placeholder' && (
-                    <p className="text-xs text-warning mt-2 text-center">
-                      🚧 Coming Soon — Image generation powered by Agnes AI
-                    </p>
+                <div className="mt-6 bg-white rounded-2xl shadow-md p-4">
+                  <p className="text-sm font-semibold text-navy mb-3">📸 Visual Claim Card — Powered by Agnes AI</p>
+                  {imageResult.status === 'success' && imageResult.url ? (
+                    <div>
+                      <img
+                        src={imageResult.url}
+                        alt="Visual Claim Card"
+                        className="w-full max-w-lg rounded-xl mx-auto shadow-md"
+                      />
+                      <a
+                        href={imageResult.url}
+                        download="claim-card.png"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-3 block text-center text-sm text-blue-600 underline"
+                      >
+                        ⬇️ Download Claim Card
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="text-center py-6 bg-gray-50 rounded-xl">
+                      <p className="text-red-500 text-sm">{imageResult.message || 'Image generation failed. Please try again.'}</p>
+                    </div>
                   )}
                 </div>
               )}
+
+              {/* Video Result */}
               {videoResult && (
-                <div className="mt-4">
-                  <p className="text-sm text-gray-600 mb-2">🎬 Video Summary:</p>
-                  <img
-                    src={videoResult.url}
-                    alt="Video Summary"
-                    className="w-full max-w-md rounded-xl mx-auto"
-                  />
-                  {videoResult.status === 'placeholder' && (
-                    <p className="text-xs text-warning mt-2 text-center">
-                      🚧 Coming Soon — Video generation powered by Agnes AI
-                    </p>
+                <div className="mt-6 bg-white rounded-2xl shadow-md p-4">
+                  <p className="text-sm font-semibold text-navy mb-3">🎬 20-Second Claim Briefing — Powered by Agnes AI</p>
+                  {videoResult.status === 'success' && videoResult.url ? (
+                    <div>
+                      <video
+                        src={videoResult.url}
+                        controls
+                        className="w-full max-w-lg rounded-xl mx-auto shadow-md"
+                        poster=""
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                      <a
+                        href={videoResult.url}
+                        download="claim-briefing.mp4"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-3 block text-center text-sm text-blue-600 underline"
+                      >
+                        ⬇️ Download Video Briefing
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="text-center py-6 bg-gray-50 rounded-xl">
+                      <p className="text-red-500 text-sm">{videoResult.message || 'Video generation failed. Please try again.'}</p>
+                    </div>
                   )}
                 </div>
               )}

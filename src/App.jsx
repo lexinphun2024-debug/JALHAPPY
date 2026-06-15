@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ElderlyModeProvider } from './context/ElderlyModeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ChatBot from './components/ChatBot';
 import Home from './pages/Home';
 import ClaimCoach from './pages/ClaimCoach';
 import SequencingOptimizer from './pages/SequencingOptimizer';
@@ -24,6 +25,7 @@ export default function App() {
             </Routes>
           </main>
           <Footer />
+          <ChatBot />
         </div>
       </Router>
     </ElderlyModeProvider>
